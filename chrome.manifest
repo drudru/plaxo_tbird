@@ -1,0 +1,8 @@
+
+
+content	plaxotbird jar:plaxotbird.jar!/content/plaxotbird/
+
+overlay	chrome://messenger/content/mailWindowOverlay.xul	    chrome://plaxotbird/content/main-overlay.xul
+overlay	chrome://messenger/content/msgHdrViewOverlay.xul	    chrome://plaxotbird/content/icui-overlay.xul
+overlay	chrome://messenger/content/addressbook/addressbook.xul	chrome://plaxotbird/content/addr-overlay.xul
+

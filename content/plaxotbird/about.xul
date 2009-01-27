@@ -1,0 +1,107 @@
+<?xml version="1.0"?> 
+
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1
+   -
+   - The contents of this file are subject to the Mozilla Public
+   - License Version 1.1 (the "License"); you may not use this file
+   - except in compliance with the License. You may obtain a copy of
+   - the License at http://www.mozilla.org/MPL/
+   - 
+   - Software distributed under the License is distributed on an "AS
+   - IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+   - implied. See the License for the specific language governing
+   - rights and limitations under the License.
+   - 
+   - The Original Code is mozilla.org code.
+   - 
+   - The Initial Developer of the Original Code is Netscape
+   - Communications Corporation.  Portions created by Netscape are
+   - Copyright (C) 1999 Netscape Communications Corporation.  All
+   - Rights Reserved.
+   - 
+   - Contributor(s): Dru Nelson            <plaxo.com>
+   -
+   - ***** END LICENSE BLOCK ***** -->
+ 
+ 
+<?xml-stylesheet href="chrome://communicator/skin/" type="text/css"?>
+
+
+<dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        onload="init();"
+        buttons="accept"
+        title="About"
+        style="background: white;"
+        >
+<script type="application/x-javascript" src="chrome://plaxotbird/content/debug.js"/>  
+<script type="application/x-javascript" src="chrome://plaxotbird/content/prefs.js"/>
+<script type="application/x-javascript">
+
+  <![CDATA[
+    PlxLogSysInit('aboutDlg');
+    function init()
+    {
+        var plxPrefsMgr = new PlxPrefsMgr();
+        var isComcast = false;
+        if (!plxPrefsMgr)
+          return;
+
+        if (plxPrefsMgr.getCharPref('plaxo.plxClientType', '') == 'Comcast')
+        {
+          isComcast = true;
+          gLog.debug("Is Comcast User");
+        } 
+        else
+          return;
+          
+        if (isComcast)
+        {
+          var control = document.getElementById("labelText");
+          if (control)
+            control.setAttribute('hidden', 'true');
+            
+          control = document.getElementById("labelBeta");
+          if (control)
+            control.setAttribute('hidden', 'true');
+        }
+        
+        
+    }
+    
+  ]]>
+    </script>
+    
+  <separator class="thin"/>
+    <vbox xpack="center" align="stretch" flex="1">
+            <hbox flex="1" pack="center">
+                <spacer flex="1"/>
+                <vbox pack="center">
+                    <image src="chrome://plaxotbird/content/logo.png" width="382" height="337" />
+                </vbox>
+            </hbox>
+            <hbox flex="1" pack="center">
+            
+                <spacer flex="0" width="10"/>
+                <vbox>
+                    <description id ="labelText" value="Plaxo Contacts for Thunderbird" style="font-weight: bold; font-size: x-large; solid;" />
+                    <description id="labelBeta" value="BETA" style="font-weight: bold; font-size: x-large; color: #800;" />
+                    <description id="labelVer" value="Version: 1.109" style="font-weight: bold;" />
+                    
+                    <description id="labelCopyRight" value="(C) 2007 Plaxo, Inc. All rights reserved."  style=" solid;" />
+                    
+                    <hbox style="margin-left: 5px;">
+                    <html:a href="http://www.plaxo.com/" tabindex="2" style="color: blue; cursor: pointer; text-decoration: underline; solid;">http://www.plaxo.com</html:a>
+                    </hbox>
+                </vbox>
+                <spacer flex="1"/>
+            </hbox>
+            
+            <hbox flex="1" pack="end" style="solid #800;">
+            <spacer flex="1"/>
+            <button dlgtype="accept" label="OK" tabindex="1"/>
+            </hbox>
+    </vbox>
+
+</dialog>

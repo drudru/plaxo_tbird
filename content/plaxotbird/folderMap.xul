@@ -1,0 +1,195 @@
+<?xml version="1.0"?> 
+
+
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1
+   -
+   - The contents of this file are subject to the Mozilla Public
+   - License Version 1.1 (the "License"); you may not use this file
+   - except in compliance with the License. You may obtain a copy of
+   - the License at http://www.mozilla.org/MPL/
+   - 
+   - Software distributed under the License is distributed on an "AS
+   - IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+   - implied. See the License for the specific language governing
+   - rights and limitations under the License.
+   - 
+   - The Original Code is mozilla.org code.
+   - 
+   - The Initial Developer of the Original Code is Netscape
+   - Communications Corporation.  Portions created by Netscape are
+   - Copyright (C) 1999 Netscape Communications Corporation.  All
+   - Rights Reserved.
+   - 
+   - Contributor(s): Dru Nelson            <plaxo.com>
+   -
+   - ***** END LICENSE BLOCK ***** -->
+ 
+
+<?xml-stylesheet href="chrome://communicator/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://communicator/skin/pref/pref.css"?>
+
+<!--
+<?xxx xml-stylesheet href="data:text/css,dialog { width: 26em; height: 20em; }" type="text/css"?>
+-->
+
+<dialog xmlns:html="http://www.w3.org/1999/xhtml"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        ondialogaccept="onAccept();"
+        onload="onLoadListbox();"
+        buttons="accept, cancel"
+        title="Map Plaxo Online Folders"
+        >
+
+    <script type="application/x-javascript" src="chrome://plaxotbird/content/prefs.js"/>
+    <script type="application/x-javascript" src="chrome://plaxotbird/content/debug.js"/>
+    
+  <script type="application/x-javascript">
+
+  <![CDATA[
+
+    PlxLogSysInit('foldermap');
+    
+    function onAccept()
+    {
+        var bag = window.arguments[0];
+        
+        bag.isGood = false;
+        
+        var rgrp = document.getElementById('plxRadio');
+        
+        var item = rgrp.selectedItem
+        bag.results = [ item.value, item.getAttribute('remoteID'), item.label ];
+    
+        bag.isGood = true;
+    }
+    
+    function onLoadListbox()
+    {
+        gLog.debug("onLoadListbox enter");
+        centerWindowOnScreen();
+        var bag = window.arguments[0];
+        
+        var rgrp = document.getElementById('plxRadio');
+    
+        gLog.info("onLoadListbox length: " + bag.remoteNames.length);
+        
+        for (var i = 0; i < bag.remoteNames.length; i++)
+        {
+            var r = document.createElement('radio');
+            r.setAttribute('label', 'Merge with online folder: ' + bag.remoteNames[i]);
+            r.setAttribute('value', bag.remoteNames[i]);
+            r.setAttribute('remoteID', bag.remoteIDs[i]);
+            
+            if (i == 0)
+                r.setAttribute('selected', 'true');
+            
+            rgrp.appendChild( r );
+        }
+        gLog.debug("onLoadListbox exit");
+    }
+    
+  ]]>
+  </script>
+
+<!--
+    <vbox>
+        <listbox id="plxFldList">
+            <listhead>
+                <listheader label="Local Folder"/>
+                <listheader label="Action"/>
+            </listhead>
+            <listcols>
+                <listcol flex="1"/>
+                <listcol flex="2"/>
+            </listcols>
+            <listitem>
+                <listcell label="George"/>
+                <listcell>
+                    <menulist label="Bus">
+                      <menupopup>
+                        <menuitem label="Car"/>
+                        <menuitem label="Taxi"/>
+                        <menuitem label="Bus" selected="true"/>
+                        <menuitem label="Train"/>
+                      </menupopup>
+                    </menulist>                
+                </listcell>
+            </listitem>
+
+        </listbox>
+    </vbox>
+-->
+
+<groupbox>
+
+    <caption label="Folder Setup"/>
+    
+    <separator class="thin"/>
+    
+    <radiogroup id="plxRadio">
+        <xxradio label="Create new folder online" value="TBird Contacts" remoteID="-1"/>
+    </radiogroup>
+
+</groupbox>
+
+    <!--
+    <vbox class="listBox buttonBox">
+    <grid id="plxGrid" flex="1">
+    <columns>
+    <column flex="5"/>
+    <column/>
+    </columns>
+    <rows id="plxGridRows">
+    <listhead>
+        <listheader label="Local Folder"/>
+        <listheader label="Action"/>
+    </listhead>
+    <row>
+        <label value="Cherry"/>
+        <menulist label="Bus">
+        <menupopup>
+        <menuitem label="Car"/>
+        <menuitem label="Taxi"/>
+        <menuitem label="Bus" selected="true"/>
+        <menuitem label="Train"/>
+        </menupopup>
+        </menulist>                
+    </row>
+    <row>
+        <label value="Strawberry"/>
+        <menulist label="Bus">
+        <menupopup>
+        <menuitem label="Car"/>
+        <menuitem label="Taxi"/>
+        <menuitem label="Bus" selected="true"/>
+        <menuitem label="Train"/>
+        </menupopup>
+        </menulist>                
+    </row>
+    </rows>
+    </grid>
+    </vbox>
+    -->
+
+<!--    
+     <vbox class="listBox buttonBox">
+         <button id="catGeneralButton"   orient="vertical" class="buttonBoxButton" type="radio" group="categories" label="general.label;"   
+               url="chrome://browser/content/pref/pref-navigator.xul"/>
+       <button id="catPrivacyButton"   orient="vertical" class="buttonBoxButton" type="radio" group="categories" label="privacy.label;"   
+               url="chrome://browser/content/pref/pref-privacy.xul"/>
+       <button id="catFeaturesbutton"  orient="vertical" class="buttonBoxButton" type="radio" group="categories" label="features.label;"  
+               url="chrome://browser/content/pref/pref-features.xul"/>
+    </vbox>
+
+    <vbox>
+    <html:p>
+    For this beta, you must be an existing Plaxo user.<html:br/>
+    If you need to create an account, go to: 
+    <html:a href="http://www.plaxo.com">http://www.plaxo.com/</html:a>
+    </html:p>
+    </vbox>
+-->
+ 
+</dialog>
+

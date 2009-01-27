@@ -1,0 +1,65 @@
+<?xml version="1.0"?> 
+
+
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1
+   -
+   - The contents of this file are subject to the Mozilla Public
+   - License Version 1.1 (the "License"); you may not use this file
+   - except in compliance with the License. You may obtain a copy of
+   - the License at http://www.mozilla.org/MPL/
+   - 
+   - Software distributed under the License is distributed on an "AS
+   - IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+   - implied. See the License for the specific language governing
+   - rights and limitations under the License.
+   - 
+   - The Original Code is mozilla.org code.
+   - 
+   - The Initial Developer of the Original Code is Netscape
+   - Communications Corporation.  Portions created by Netscape are
+   - Copyright (C) 1999 Netscape Communications Corporation.  All
+   - Rights Reserved.
+   - 
+   - Contributor(s): Dru Nelson            <plaxo.com>
+   -
+   - ***** END LICENSE BLOCK ***** -->
+ 
+ 
+<?xml-stylesheet href="chrome://communicator/skin/" type="text/css"?>
+
+<dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        onload="centerWindowOnScreen();"
+        buttons="accept"
+        title="Welcome to the Plaxo toolbar for Thunderbird"
+        style="width: 380px; height: 180px;">
+    
+    
+    <vbox>
+    <hbox>
+    <vbox flex="1">
+    <description flex="1">
+    Thanks for downloading the Plaxo Toolbar for Thunderbird.
+    This toolbar allows you to synchronize your Plaxo Address Book to your Thunderbird
+    Address Book.
+    </description>
+    <description>
+    If you are not already a Plaxo member, you need to register to continue.
+    To register, please visit 
+    <html:a href="http://www.plaxo.com/" style="color: blue; cursor: pointer; text-decoration: underline;">http://www.plaxo.com</html:a>
+    </description>
+    </vbox>
+    <image src="chrome://plaxotbird/content/logo.png" width="191" height="168" flex="0" align="end" />
+    </hbox>
+    
+    <hbox>
+    <spacer flex="1"/>
+    <button dlgtype="accept" label="Next >" />
+    </hbox>
+    </vbox>
+
+
+    
+</dialog>
+

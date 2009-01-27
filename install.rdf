@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+  <Description about="urn:mozilla:install-manifest">
+    <em:id>{2F6C19B1-BE3C-421f-8962-D2BBBF9578F4}</em:id>
+    <em:version>1.109</em:version>
+    
+    <!-- GUID guid for Thunderbird --> 
+    <em:targetApplication>
+      <Description>
+        <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
+        <em:minVersion>1.0+</em:minVersion>
+        <em:maxVersion>2.0.*.*</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+    
+    <em:name>Plaxo</em:name>
+    <em:description>Provides Thunderbird with Plaxo access.</em:description>
+    <em:creator>Dru Nelson</em:creator>
+    <em:homepageURL>http://www.plaxo.com/</em:homepageURL>
+    <em:updateURL>http://down.plaxo.com/down2/tbird/release/update.rdf</em:updateURL>
+    
+    <!-- Front End Integration Hooks (used by Extension Manager)-->
+    <em:optionsURL>chrome://plaxotbird/content/prefsDlg.xul</em:optionsURL>
+    <em:iconURL>chrome://plaxotbird/content/syncIcon.png</em:iconURL>
+    
+    <!-- This is not needed for THUNDERBIRD 1.5 and later. This is only included
+         for Thunderbird 1.x compatibility -->
+    <em:file>
+      <Description about="urn:mozilla:extension:file:plaxotbird.jar">
+        <em:package>content/plaxotbird/</em:package>
+        <em:locale>locale/en-US/plaxotbird/</em:locale>
+        <em:skin>skin/classic/plaxotbird/</em:skin>
+      </Description>
+    </em:file>
+  </Description>      
+</RDF>

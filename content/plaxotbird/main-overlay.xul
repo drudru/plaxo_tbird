@@ -1,0 +1,82 @@
+<?xml version="1.0"?> 
+
+
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1
+   -
+   - The contents of this file are subject to the Mozilla Public
+   - License Version 1.1 (the "License"); you may not use this file
+   - except in compliance with the License. You may obtain a copy of
+   - the License at http://www.mozilla.org/MPL/
+   - 
+   - Software distributed under the License is distributed on an "AS
+   - IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+   - implied. See the License for the specific language governing
+   - rights and limitations under the License.
+   - 
+   - The Original Code is mozilla.org code.
+   - 
+   - The Initial Developer of the Original Code is Netscape
+   - Communications Corporation.  Portions created by Netscape are
+   - Copyright (C) 1999 Netscape Communications Corporation.  All
+   - Rights Reserved.
+   - 
+   - Contributor(s): Dru Nelson            <plaxo.com>
+   -
+   - ***** END LICENSE BLOCK ***** -->
+ 
+
+<overlay id="main-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<toolbox id="mail-toolbox">
+
+    <toolbar id="plaxo-bar" class="toolbar-primary chromeclass-toolbar"
+               toolbarname="Plaxo" 
+               customizable="false">
+        
+        <toolbarbutton id="plaxoMenuBtn" label="Plaxo" image="chrome://plaxotbird/content/menuIcon.png" class="toolbarbutton-1" 
+                       type="menu"> 
+            <menupopup id="plxMenuMenu">
+                <menu label="Tools">
+                  <menupopup id="plxTools">
+                    <menuitem label="Fix Duplicates" oncommand="HandleClick('plxDedup')"/>
+                    <menuitem id="plxUABB" label="Universal Address Book Builder" oncommand="HandleClick('plxUABB')" hidden="true" />                  
+                    <menuitem label="Rollback and Recovery" oncommand="HandleClick('plxRollback')"/>
+                  </menupopup>
+                </menu>
+                <menuitem label="Preferences" oncommand="HandleClick('plxprefs')" />
+                <menuitem label="About" oncommand="HandleClick('plxabout')"/>
+                <menuitem id="plxComcastHelpMenuItem" label="Help Center" oncommand="HandleClick('plxComcastHelp')" hidden="true" />
+            </menupopup>
+        </toolbarbutton>
+        
+        <toolbarbutton id="updateContactsBtn" label="Update Contacts" image="chrome://plaxotbird/content/ucwIcon.png" class="toolbarbutton-1" oncommand="HandleClick('plxucw')" />
+        <toolbarbutton id="myPlaxoBtn" label="My Plaxo" image="chrome://plaxotbird/content/myplaxoIcon.png" class="toolbarbutton-1" oncommand="HandleClick('plxmyplaxo')" />
+        <toolbarbutton id="sendECard" label="Send an eCard" image="chrome://plaxotbird/content/eCardIcon.png" class="toolbarbutton-1" oncommand="HandleClick('plxECard')" />
+        <toolbarbutton id="syncBtn" label="Sync" image="chrome://plaxotbird/content/syncIcon.png" class="toolbarbutton-1" oncommand="HandleClick('plxsync')" />
+
+    </toolbar>
+</toolbox>
+
+    
+<menubar id="mail-menubar">
+    <menu label="Plaxo">
+        <menupopup id="plaxo-menu-popup">
+            <menuitem id="updateContactsItem" label="Update Contacts" oncommand="HandleClick('plxucw')" />
+            <menuitem label="My Plaxo" oncommand="HandleClick('plxmyplaxo')" />
+            <menuitem label="Sync"     oncommand="HandleClick('plxsync')" />
+            <menuseparator/>
+            <menuitem label="Preferences" oncommand="HandleClick('plxprefs')" />
+            <menuitem label="About" oncommand="HandleClick('plxabout')" />
+        </menupopup>
+    </menu>
+</menubar>
+
+
+<script type="application/x-javascript" src="chrome://plaxotbird/content/plaxo.js"/>
+<script type="application/x-javascript" src="chrome://plaxotbird/content/http.js"/>
+<script type="application/x-javascript" src="chrome://plaxotbird/content/abook.js"/>
+
+</overlay>
+
+

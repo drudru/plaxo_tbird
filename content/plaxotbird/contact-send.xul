@@ -1,0 +1,124 @@
+<?xml version="1.0"?> 
+
+
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1
+   -
+   - The contents of this file are subject to the Mozilla Public
+   - License Version 1.1 (the "License"); you may not use this file
+   - except in compliance with the License. You may obtain a copy of
+   - the License at http://www.mozilla.org/MPL/
+   - 
+   - Software distributed under the License is distributed on an "AS
+   - IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+   - implied. See the License for the specific language governing
+   - rights and limitations under the License.
+   - 
+   - The Original Code is mozilla.org code.
+   - 
+   - The Initial Developer of the Original Code is Netscape
+   - Communications Corporation.  Portions created by Netscape are
+   - Copyright (C) 1999 Netscape Communications Corporation.  All
+   - Rights Reserved.
+   - 
+   - Contributor(s): Dru Nelson            <plaxo.com>
+   -
+   - ***** END LICENSE BLOCK ***** -->
+ 
+
+<?xml-stylesheet href="chrome://communicator/skin/" type="text/css"?>
+
+<!--
+?xml-stylesheet href="chrome://messenger/skin/prefPanels.css" type="text/css"?>
+!DOCTYPE dialog SYSTEM "chrome://plaxotbird/locale/register.dtd">
+-->
+
+<dialog xmlns:html="http://www.w3.org/1999/xhtml"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        ondialogaccept="onAccept();"
+        onload="centerWindowOnScreen();onLoad();"
+        buttons="accept, cancel"
+        title="Plaxo : Make a Connection"
+        >
+
+  <script type="application/x-javascript">
+
+  <![CDATA[
+    var _elementIDs = ["plxDiagLogging", "plxShowAlerts"];
+    
+    function onAccept()
+    {
+        var bag = window.arguments[0];
+        
+        bag.addToBook = document.getElementById('addToBook').checked;
+        bag.requestUpdate = document.getElementById('requestUpdate').checked;
+        bag.sendInfo = document.getElementById('sendInfo').checked;
+        bag.perms = document.getElementById('perms').selectedItem.value;
+        bag.sendBizCard = bag.perms & 1;
+        bag.sendPersonalCard = bag.perms & 2;
+        bag.personalMessage = document.getElementById('personalMessage').value;
+        
+        var stuff = 'addToBook: ' + bag.addToBook + ' sendInfo: ' + bag.sendInfo;
+        stuff = stuff + ' requestUpdate: ' + bag.requestUpdate + ' \nperms: ' + bag.perms;
+        stuff = stuff + '\n sendBiz: ' + bag.sendBizCard + ' sendP: ' + bag.sendPersonalCard;
+        alert(stuff);
+
+        bag.isGood = true;
+    }
+
+
+    function plxSetNode(node, text)
+    {
+        if ( node )
+        {
+             if ( !node.hasChildNodes() )
+             {
+                     var textNode = document.createTextNode(text);
+                     node.appendChild(textNode);                                     
+             }
+             else if ( node.childNodes.length == 1 )
+                     node.childNodes[0].nodeValue = text;    
+        }
+    }
+
+
+    function onLoad()
+    {
+        var bag = window.arguments[0];
+        
+        var userLabel = document.getElementById("fnameEmailAddr");
+        userLabel.value = bag.email;
+        plxSetNode(userLabel, bag.email);
+    }
+        
+
+  ]]>
+  </script>
+
+    <html:h1>Make a Connection</html:h1>
+    <html:h2 id="fnameEmailAddr">Full Name - &lt;email> </html:h2>
+    
+    <html:hr/>
+    
+    <checkbox label="Add this contact to my address book" checked="false" id="addToBook"/>
+    <checkbox label="Request updatated information from this contact" checked="true" id="requestUpdate"/>
+    <hbox>
+        <checkbox label="Send my" checked="true" id="sendInfo"/>
+        <menulist label="CardType" id="perms">
+          <menupopup>
+            <menuitem value="1"  label="Business Card" selected="true"/>
+            <menuitem value="2"  label="Personal Card"/>
+            <menuitem value="3" label="Business and Personal Card"/>
+          </menupopup>
+        </menulist>
+    </hbox>
+    <textbox
+        id="personalMessage"
+        multiline="true"
+        value="I'm updating my address book. Please take a moment to update your latest contact information. Your information is stored in my personal address book and will not be shared with anyone else. Plaxo is free, if you'd like to give it a try."
+        maxlength="950"
+        rows="5"
+    />
+           
+</dialog>
+

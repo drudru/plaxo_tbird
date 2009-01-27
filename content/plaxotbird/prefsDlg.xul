@@ -1,0 +1,373 @@
+<?xml version="1.0"?> 
+
+
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1
+   -
+   - The contents of this file are subject to the Mozilla Public
+   - License Version 1.1 (the "License"); you may not use this file
+   - except in compliance with the License. You may obtain a copy of
+   - the License at http://www.mozilla.org/MPL/
+   - 
+   - Software distributed under the License is distributed on an "AS
+   - IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+   - implied. See the License for the specific language governing
+   - rights and limitations under the License.
+   - 
+   - The Original Code is mozilla.org code.
+   - 
+   - The Initial Developer of the Original Code is Netscape
+   - Communications Corporation.  Portions created by Netscape are
+   - Copyright (C) 1999 Netscape Communications Corporation.  All
+   - Rights Reserved.
+   - 
+   - Contributor(s): Dru Nelson            <plaxo.com>
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+
+<?xml-stylesheet href="chrome://communicator/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://messenger/skin/prefPanels.css" type="text/css"?>
+
+<dialog id="plxPrefsDlg"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        onload="init();"
+        buttons="accept, cancel"
+        ondialogaccept="savePrefs();"
+        xxxpersist="screenX screenY"
+        title="Plaxo Preferences"
+        xxstyle="background: white;">
+
+    <script type="application/x-javascript" src="chrome://plaxotbird/content/prefs.js"/>
+    <script type="application/x-javascript" src="chrome://plaxotbird/content/debug.js"/>
+    <script type="application/x-javascript" src="chrome://plaxotbird/content/fileutil.js"/>
+    
+    <script type="application/x-javascript">
+
+  <![CDATA[
+  
+    PlxLogSysInit('prefsDlg');
+
+    var _elementIDs = ["plxShowICUI", "plxShowToolbar", "plxManualSync", "plxHost", "plxLogLevel"];
+    
+    var gHost;
+    var isComcast = false;
+    var gLoggingLevel;
+    
+    function init()
+    {
+        gLog.debug("Doing prefs init");
+        
+        //centerWindowOnScreen();
+        
+        var pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
+        
+        try { 
+          var clientType = pref.getCharPref('plaxo.plxClientType');
+          if (clientType) {
+            isComcast = (clientType == 'Comcast');
+            gLog.debug('clientType is Comcast'); 
+          }
+        } catch (ex) { 
+          gLog.debug('no pref: plaxo.plxClientType'); 
+        }
+        
+        // initialize the default window values...
+        for( var i = 0; i < _elementIDs.length; i++ )
+        {        
+            var elementID = _elementIDs[i];
+            
+            var element = document.getElementById(elementID);
+            if (!element)
+                break;
+                
+            if (isComcast && (elementID == 'plxShowICUI'))
+            {
+              element.setAttribute('hidden', 'true');
+            }
+            var eltType = element.localName;
+            if (eltType == "radiogroup")
+              try { element.selectedItem = element.childNodes[pref.getIntPref(element.getAttribute("prefstring"))]; } catch (ex) { gLog.debug('no pref: ' + elementID); }
+            else if (eltType == "checkbox")
+              try { element.checked = pref.getBoolPref(element.getAttribute("prefstring")); } catch (ex) { gLog.debug('no pref: ' + elementID); }
+            else if (eltType == "textbox")
+              try { element.setAttribute("value", pref.getIntPref(element.getAttribute("prefstring")) ); } catch (ex) { gLog.debug('no pref: ' + elementID); }
+            else if (eltType == "menulist")
+              try {
+                gLog.debug("Setting menulist...");
+                if (elementID == 'plxHost')
+                {
+                var txt = pref.getCharPref(element.getAttribute("prefstring"));
+                gHost = txt;
+                element.selectedItem = document.getElementById(txt);
+              }
+                else if (elementID == 'plxLogLevel')
+                {
+                  var lvl = pref.getIntPref(element.getAttribute("prefstring"));
+                  gLoggingLevel = lvl;
+                  element.selectedIndex = lvl;
+                }
+              }
+              catch (ex)
+              {
+                gLog.debug(ex); gLog.debug('no pref: ' + elementID + '\n');
+              }
+        }    
+        
+        var element = document.getElementById('plxPath');
+        var plxFile = new PlxFile();
+        var tmpPath = plxFile.getProfileDir();
+        if (tmpPath != '')
+            element.setAttribute("value", tmpPath);
+        else
+            element.setAttribute("value", "unknown");
+        
+        element.readonly = true;
+    
+    }
+
+    function enableField(aCheckbox, aNodeID) 
+    { 
+       var aField = document.getElementById(aNodeID); 
+       if (aCheckbox.checked) 
+         aField.removeAttribute("disabled"); 
+       else 
+         aField.setAttribute("disabled", "true"); 
+    } 
+    
+    function xxxspecialField(element, aNodeID) 
+    { 
+        if (aNodeID == 'plxResetAccount')
+        {
+            var pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
+        
+            var aField = document.getElementById(aNodeID);
+            aField.setAttribute("disabled", "true");
+            aField.setAttribute("label", "GO HIT SYNC");
+            pref.setIntPref('plaxo.plxInstallState', 0);
+        }
+    }
+
+    function savePrefs()
+    {
+      var pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
+
+      for( var i = 0; i < _elementIDs.length; i++ )
+      {
+        var elementID = _elementIDs[i];
+
+        var element = document.getElementById(elementID);
+        if (!element) break;
+        var eltType = element.localName;
+
+        if (eltType == "radiogroup")
+          pref.setIntPref(element.getAttribute("prefstring"), parseInt(element.value));
+        else if (eltType == "checkbox")
+          pref.setBoolPref(element.getAttribute("prefstring"), element.checked);
+        else if (eltType == "textbox" && element.preftype == "int")
+          pref.setIntPref(element.getAttribute("prefstring"), parseInt(element.getAttribute("value")) );
+        else if (eltType == "menulist")
+        {
+            try
+            {
+              if (elementID == 'plxHost')
+              {              
+                  pref.setCharPref(element.getAttribute("prefstring"), element.selectedItem.value);
+                  if (gHost != element.selectedItem.value)
+                  {
+                    sendMsgToObservers('plxResetAccount');
+                  }
+            }
+              else if (elementID == 'plxLogLevel')
+              {
+                if (gLoggingLevel != element.selectedIndex)
+                  alert('You need to restart Thunderbird to make changes effective.');
+                pref.setIntPref(element.getAttribute("prefstring"), element.selectedIndex);
+              }
+            }
+            catch (ex)
+            {
+                gLog.error("couldn't save pref for: " + elementID);
+            }
+        }
+       }
+    }
+
+    function plxHostChange(element)
+    {
+        if (gHost == element.selectedItem.value)
+            return;
+        
+        if (confirm('This will cause a complete account reset. Are you sure?') == false)
+        {
+            element.selectedItem = document.getElementById(gHost);
+            gLog.info("Cancel host change");
+        }
+    }
+
+    function sendToObserver(element, command)
+    {
+    
+        if (command == 'plxResetAccount')
+        {
+            if (confirm('This will do a complete account reset. Are you sure?') == false)
+                return;
+                
+            alert('Plaxo - Account was fully reset.');
+        }
+    
+        sendMsgToObservers(command);
+              
+    }
+    
+    
+    function sendMsgToObservers(command)
+    {
+    
+        var enumerator = Components.classes["@mozilla.org/observer-service;1"]
+                               .getService(Components.interfaces.nsIObserverService)
+                               .enumerateObservers("PlxMainObserver");
+        var i = 0;
+        while (enumerator.hasMoreElements())
+        {
+          try
+          {
+              var o = enumerator.getNext().QueryInterface(Components.interfaces.nsIObserver);
+              i = i + 1;
+          }
+          catch (e)
+          {
+            gLog.warn('Caught execption while enumerating: ' + e);
+          }
+        }
+        
+        gLog.debug('Found: ' + i + ' observers');
+    
+      try
+      {
+        gLog.debug('doing notify Observers');
+         Components.classes["@mozilla.org/observer-service;1"]
+             .getService(Components.interfaces.nsIObserverService)
+             .notifyObservers(null, "PlxMainObserver", command);
+      }
+      catch (e)
+      {
+        gLog.error("Failed to notify observers.");
+      }      
+    }
+  ]]>
+    </script>
+<vbox>
+  <vbox>
+  <description>
+  The following options are for this computer only. To change your Plaxo
+  </description>
+  </vbox>
+  <vbox>
+  <description>
+  settings, visit the following links:
+  </description>
+  </vbox>
+  <vbox>
+    <label class="text-link" flex="1" onclick="sendToObserver(this, 'plxSettings')" tabindex="-1">Plaxo - Settings</label>
+  </vbox>
+    <vbox>
+    <label class="text-link" flex="1" onclick="sendToObserver(this, 'plxCommPrefs')" tabindex="-1">Plaxo - Communication Preferences</label>
+  </vbox>
+</vbox>
+<groupbox>
+  <caption label="Preferences"/>
+
+  <separator class="thin"/>
+
+  <checkbox id="plxShowICUI" label="Show In Context UI on my messages" xxaccesskey="plxShowICUI.accesskey;"
+    prefstring="plaxo.plxShowICUI" /> 
+
+  <checkbox id="plxShowToolbar" label="Show Toolbar" xxaccesskey="plxShowToolbar.accesskey;"
+    prefstring="plaxo.plxShowToolbar" /> 
+
+<checkbox id="plxManualSync" label="Manual Sync" xxaccesskey="plxManualSync.accesskey;"
+    prefstring="plaxo.plxManualSync" /> 
+</groupbox>
+
+
+
+<groupbox>
+  <caption label="Diagnostics"/>
+
+<!--
+  <hbox>
+  <label value="Test command:"/>
+  <spacer flex="1"/>
+  <button id="plxSlowSync2" label="Test CMD" oncommand="hitObserver();" /> 
+  </hbox>
+-->
+
+    <groupbox hidden="true">
+      <caption label="Plaxo Host"/>
+    
+      <separator class="thin"/>
+      
+      <hbox>
+            <label value="Server:"/>
+            <!-- Nice to know.  If a menulist isn't editable, you don't get the onchange events (joy!) -->
+            <menulist label="Host" id="plxHost" allowevents="true" prefstring="plaxo.plxHost" oncommand="plxHostChange(this);" >
+              <menupopup>
+                <menuitem id="https://oapi.plaxo.com/"  value="https://oapi.plaxo.com/"  label="https://oapi.plaxo.com/" selected="true" />
+                <menuitem id="https://test.plaxo.com/"  value="https://test.plaxo.com/"  label="https://test.plaxo.com/" />
+                <menuitem id="https://eng2.plaxo.com/"  value="https://eng2.plaxo.com/"  label="https://eng2.plaxo.com/" />
+              </menupopup>
+            </menulist>
+      </hbox>
+    
+    </groupbox>
+
+    <!--<groupbox>
+      <caption label="Logging Level"/>
+      <separator class="thin"/> -->
+      <hbox>
+            
+            <label value="Logging Level:" />
+            <menulist id="plxLogLevel" allowevents="true" prefstring="plaxo.plxLogLevel" oncommand="plxSetLoggingLevel(this);" flex="1" >
+              <menupopup>
+                <menuitem id="plxLogDebug" value="debug"  label="0 - Debug" />
+                <menuitem id="plxLogInfo"  value="info"  label="1 - Info" />
+                <menuitem id="plxLogWarn"  value="warn"  label="2 - Warn" selected="true" />
+                <menuitem id="plxLogError"  value="error"  label="3 - Error" />
+                <menuitem id="plxLogFatal"  value="fatal"  label="4 - Fatal" />
+              </menupopup>
+            </menulist>
+      </hbox>
+      <separator class="thin"/>
+      <!--</groupbox>-->
+
+  <hbox>
+  <label value="Reset for a full sync (slow sync):"/>
+  <spacer flex="1"/>
+  <button id="plxSlowSync" label="Slow Sync" xxprefstring="plaxo.plxResetAccount" oncommand="sendToObserver(this, 'plxSlowSync');"/> 
+  </hbox>
+  
+  <hbox>
+  <label value="Location of profile directory:"/>
+  <spacer flex="1"/>
+  <textbox id="plxPath" /> 
+  </hbox>
+  
+  <hbox>
+  <label value="Send log file to Plaxo"/>
+  <spacer flex="1"/>
+  <button id="plxSendLog" label="Send Log" xxprefstring="plaxo.plxSendLog" oncommand="sendToObserver(this, 'plxSendLog');"/> 
+  </hbox>
+   
+</groupbox>
+
+<groupbox>
+  <caption label="Configurations"/>
+  <hbox>
+  <label value="Reset your stored user id and password:"/>
+  <spacer flex="1"/>
+  <button id="plxResetAccount" label="Reset Account" xxprefstring="plaxo.plxResetAccount" oncommand="sendToObserver(this, 'plxResetAccount');"/> 
+  </hbox>
+</groupbox>
+
+</dialog>

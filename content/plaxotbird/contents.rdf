@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<RDF:RDF xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:chrome="http://www.mozilla.org/rdf/chrome#">
+
+  <!-- list all the packages being supplied by this jar -->
+  <RDF:Seq about="urn:mozilla:package:root">
+    <RDF:li resource="urn:mozilla:package:plaxotbird"/>
+  </RDF:Seq>
+
+  <!-- package information -->
+  <RDF:Description about="urn:mozilla:package:plaxotbird"
+        chrome:extension="true"
+        chrome:name="plaxotbird">
+  </RDF:Description>
+
+  <!-- overlay information -->
+  <RDF:Seq about="urn:mozilla:overlays">
+    <RDF:li resource="chrome://messenger/content/mailWindowOverlay.xul"/>
+    <RDF:li resource="chrome://messenger/content/addressbook/addressbook.xul"/>
+    <RDF:li resource="chrome://messenger/content/msgHdrViewOverlay.xul"/>
+  </RDF:Seq>
+
+  <RDF:Seq about="chrome://messenger/content/mailWindowOverlay.xul">
+    <RDF:li>chrome://plaxotbird/content/main-overlay.xul</RDF:li>
+  </RDF:Seq>
+
+  <RDF:Seq about="chrome://messenger/content/addressbook/addressbook.xul">
+    <RDF:li>chrome://plaxotbird/content/addr-overlay.xul</RDF:li>
+  </RDF:Seq>
+  
+  <RDF:Seq about="chrome://messenger/content/msgHdrViewOverlay.xul">
+    <RDF:li>chrome://plaxotbird/content/icui-overlay.xul</RDF:li>
+  </RDF:Seq>
+</RDF:RDF>
